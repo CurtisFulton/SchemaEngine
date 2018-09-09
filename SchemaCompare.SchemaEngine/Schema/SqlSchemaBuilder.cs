@@ -21,7 +21,8 @@ namespace SchemaCompare.SchemaEngine.Schema
         {
             var schema = new SqlSchema {
                 [ObjectType.Table] = GetUserTables(connectionString),
-                [ObjectType.View] = GetViews(connectionString)
+                [ObjectType.View] = GetViews(connectionString),
+                [ObjectType.Procedure] = GetProcedures(connectionString)
             };
 
             return schema;
@@ -33,10 +34,12 @@ namespace SchemaCompare.SchemaEngine.Schema
             // Start loading all the different data sets
             var tableTask = Task.Run(() => GetUserTables(connectionString));
             var viewTask = Task.Run(() => GetViews(connectionString));
+            var procTask = Task.Run(() => GetProcedures(connectionString));
 
             var schema = new SqlSchema {
                 [ObjectType.Table] = await tableTask,
-                [ObjectType.View] = await viewTask
+                [ObjectType.View] = await viewTask,
+                [ObjectType.Procedure] = await procTask
             };
             
             return schema;
@@ -85,6 +88,19 @@ namespace SchemaCompare.SchemaEngine.Schema
             
             // Cast the views list to be IDatabaseObjects and return
             return allViews.Cast<IDatabaseObject>().ToList();
+        }
+
+        private List<IDatabaseObject> GetProcedures(string connectionString)
+        {
+            List<ProcedureObject> allProcedures = null;
+
+            // Get all the procedures
+            using (var con = new SqlConnection(connectionString)) {
+                allProcedures = con.Query<ProcedureObject>(QueryHelper.ProcedureQuery, new { Catalog = con.Database }).ToList();
+            }
+
+            // Cast the procedures list to be IDatabaseObjects and return
+            return allProcedures.Cast<IDatabaseObject>().ToList();
         }
     }
 }

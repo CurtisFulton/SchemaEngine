@@ -29,7 +29,7 @@ namespace SchemaCompare.App
 
             sw.Start();
 
-            int numLoops = 1;
+            int numLoops = 10;
             for (int i = 0; i < numLoops; i++) {
                 await RegisterDatabasesAsync(dbA, dbB);
                 //RegisterDatabases(dbA, dbB);

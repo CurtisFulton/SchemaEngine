@@ -7,6 +7,7 @@ namespace SchemaCompare.SchemaEngine.Schema
         Function,
         Trigger,
         Column,
-        Index
+        Index,
+        Procedure
     }
 }

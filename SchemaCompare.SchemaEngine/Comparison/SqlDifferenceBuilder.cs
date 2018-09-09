@@ -12,9 +12,10 @@ namespace SchemaCompare.SchemaEngine.Comparison
         {
             var differences = new Differences();
 
-            //differences.AddRange(this.SimpleComparer.GetDifferences(databaseA[ObjectType.Table], databaseB[ObjectType.Table], options));
+            differences.AddRange(this.SimpleComparer.GetDifferences(databaseA[ObjectType.Table], databaseB[ObjectType.Table], options));
             differences.AddRange(this.SimpleComparer.GetDifferences(databaseA[ObjectType.View], databaseB[ObjectType.View], options));
-            
+            differences.AddRange(this.SimpleComparer.GetDifferences(databaseA[ObjectType.Procedure], databaseB[ObjectType.Procedure], options));
+
             return differences;
         }
     }

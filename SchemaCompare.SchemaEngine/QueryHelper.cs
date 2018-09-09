@@ -62,30 +62,15 @@ namespace SchemaCompare.SchemaEngine
             where type='V' and vw.TABLE_CATALOG = @Catalog
         ";
 
-        // Matches with the 'CREATE/ALTER <NAME> AS' part of an object definition
-        private static readonly Regex ViewRegex = new Regex(@"^.*?(?:CREATE|ALTER).*?AS\s+", RegexOptions.IgnoreCase | RegexOptions.Singleline);
-
-        /// <summary>
-        /// Removes the 'CREATE/ALTER <NAME> AS' at the start of an object definition.
-        /// </summary>
-        /// <param name="objectDefinition">Object definition as returned by the Database</param>
-        /// <returns>The true definition for an object</returns>
-        public static string ReduceObjectDefintion(string objectDefinition)
-        {
-            if (objectDefinition.IsEmpty())
-                return null;
-
-            var match = ViewRegex.Match(objectDefinition);
-            
-            if (objectDefinition.Contains("Extension_PurchaseOrder")) {
-                var suc = match.Success;
-            }
-
-            if (!match.Success)
-                return objectDefinition;
-
-            var reducedDefinition = objectDefinition.Replace(match.Value, "");
-            return reducedDefinition;
-        }
+        public const string ProcedureQuery = @"
+            SELECT 
+	            DB_NAME() as [ProcedureCatalog],
+	            schm.name as [SchemaName],
+	            OBJECT_NAME(obj.OBJECT_ID) [ProcedureName],
+	            OBJECT_DEFINITION(obj.OBJECT_ID) [ProcedureDefinition]
+            FROM sys.objects obj
+            INNER JOIN sys.schemas schm on schm.schema_id = obj.schema_id
+            where obj.type = 'P' and DB_NAME() = @Catalog
+        ";
     }
 }
