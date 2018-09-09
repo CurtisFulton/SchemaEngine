@@ -43,7 +43,6 @@ namespace SchemaCompare.SchemaEngine
         private IScriptBlock CreateViewBlock()
         {
             SqlBlock block = new SqlBlock(BlockType.Drop, this.ViewName, this.Type);
-            var regex = new Regex(@"\/\*[^\/]*\*\/|(ALTER VIEW)", RegexOptions.IgnoreCase | RegexOptions.Singleline);
 
             // If it exists, drop it
             block.AppendLine("IF OBJECT_ID(N'" + this.ViewName + "', N'V') IS NOT NULL");

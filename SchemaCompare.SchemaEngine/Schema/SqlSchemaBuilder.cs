@@ -22,7 +22,9 @@ namespace SchemaCompare.SchemaEngine.Schema
             var schema = new SqlSchema {
                 [ObjectType.Table] = GetUserTables(connectionString),
                 [ObjectType.View] = GetViews(connectionString),
-                [ObjectType.Procedure] = GetProcedures(connectionString)
+                [ObjectType.Procedure] = GetProcedures(connectionString),
+                [ObjectType.TableFunction] = GetTableFunctions(connectionString),
+                [ObjectType.ScalarFunction] = GetScalarFunctions(connectionString),
             };
 
             return schema;
@@ -31,15 +33,19 @@ namespace SchemaCompare.SchemaEngine.Schema
         public async Task<IDatabaseSchema> GetSchemaAsync(string connectionString) => await this.GetSchemaAsync(connectionString, Options.Default);
         public async Task<IDatabaseSchema> GetSchemaAsync(string connectionString, Options options)
         {
-            // Start loading all the different data sets
+            // Start loading all the different data sets without awaiting any of them
             var tableTask = Task.Run(() => GetUserTables(connectionString));
             var viewTask = Task.Run(() => GetViews(connectionString));
             var procTask = Task.Run(() => GetProcedures(connectionString));
-
+            var tableFuncTask = Task.Run(() => GetTableFunctions(connectionString));
+            var scalarFuncTask = Task.Run(() => GetScalarFunctions(connectionString));
+            
             var schema = new SqlSchema {
                 [ObjectType.Table] = await tableTask,
                 [ObjectType.View] = await viewTask,
-                [ObjectType.Procedure] = await procTask
+                [ObjectType.Procedure] = await procTask,
+                [ObjectType.TableFunction] = await tableFuncTask,
+                [ObjectType.ScalarFunction] = await scalarFuncTask,
             };
             
             return schema;
@@ -101,6 +107,35 @@ namespace SchemaCompare.SchemaEngine.Schema
 
             // Cast the procedures list to be IDatabaseObjects and return
             return allProcedures.Cast<IDatabaseObject>().ToList();
+        }
+
+        private List<IDatabaseObject> GetTableFunctions(string connectionString)
+        {
+            List<FunctionObject> allTableFunctions = null;
+
+            // Get all the procedures
+            using (var con = new SqlConnection(connectionString)) {
+                allTableFunctions = con.Query<FunctionObject>(QueryHelper.TableFunctionQuery, new { Catalog = con.Database }).ToList();
+            }
+
+            // Cast the procedures list to be IDatabaseObjects and return
+            return allTableFunctions.Cast<IDatabaseObject>().ToList();
+        }
+
+        private List<IDatabaseObject> GetScalarFunctions(string connectionString)
+        {
+            List<FunctionObject> allScalarFunctions = null;
+
+            // Get all the procedures
+            using (var con = new SqlConnection(connectionString)) {
+                allScalarFunctions = con.Query<FunctionObject>(QueryHelper.ScalarFunctionQuery, new { Catalog = con.Database }).ToList();
+            }
+
+            // Update all the func types to be Scalar
+            allScalarFunctions.ForEach(func => func.Type = ObjectType.ScalarFunction);
+
+            // Cast the procedures list to be IDatabaseObjects and return
+            return allScalarFunctions.Cast<IDatabaseObject>().ToList();
         }
     }
 }

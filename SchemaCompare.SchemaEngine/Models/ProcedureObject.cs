@@ -2,7 +2,6 @@ using SchemaCompare.SchemaEngine.Schema;
 using SchemaCompare.SchemaEngine.Scripting;
 using System;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
 
 namespace SchemaCompare.SchemaEngine
 {
@@ -18,7 +17,7 @@ namespace SchemaCompare.SchemaEngine
             set { this.procedureDefinition = value.Trim(); }
         }
 
-        public ObjectType Type => ObjectType.View;
+        public ObjectType Type => ObjectType.Procedure;
         public string FullyQualifiedName => $"[{this.SchemaName}].[{this.ProcedureName}]";
 
         public IEnumerable<IScriptBlock> AlterTo(IDatabaseObject obj, Options options)
@@ -44,7 +43,6 @@ namespace SchemaCompare.SchemaEngine
         private IScriptBlock CreateProcedure()
         {
             SqlBlock block = new SqlBlock(BlockType.Drop, this.ProcedureName, this.Type);
-            var regex = new Regex(@"\/\*[^\/]*\*\/|(ALTER VIEW)", RegexOptions.IgnoreCase | RegexOptions.Singleline);
 
             // If it exists, drop it
             block.AppendLine("IF OBJECT_ID(N'" + this.ProcedureName + "', N'P') IS NOT NULL");

@@ -12,6 +12,8 @@ namespace SchemaCompare.SchemaEngine.Scripting
             var blocks = new List<IScriptBlock>(differences.Count);
 
             foreach (var difference in differences) {
+                if (!difference.UseInGeneration) continue;
+
                 IScriptableObject sourceObj = difference.DatabaseObjectA;
                 IScriptableObject targetObj = difference.DatabaseObjectB;
                 

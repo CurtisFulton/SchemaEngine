@@ -72,5 +72,27 @@ namespace SchemaCompare.SchemaEngine
             INNER JOIN sys.schemas schm on schm.schema_id = obj.schema_id
             where obj.type = 'P' and DB_NAME() = @Catalog
         ";
+
+        public const string TableFunctionQuery = @"
+            SELECT 
+	            DB_NAME() as [Catalog],
+	            schm.name as [SchemaName],
+	            OBJECT_NAME(obj.OBJECT_ID) [FunctionName],
+	            OBJECT_DEFINITION(obj.OBJECT_ID) [FunctionDefinition]
+            FROM sys.objects obj
+            INNER JOIN sys.schemas schm on schm.schema_id = obj.schema_id
+            where obj.type = 'TF' and DB_NAME() = @Catalog
+        ";
+
+        public const string ScalarFunctionQuery = @"
+            SELECT 
+	            DB_NAME() as [Catalog],
+	            schm.name as [SchemaName],
+	            OBJECT_NAME(obj.OBJECT_ID) [FunctionName],
+	            OBJECT_DEFINITION(obj.OBJECT_ID) [FunctionDefinition]
+            FROM sys.objects obj
+            INNER JOIN sys.schemas schm on schm.schema_id = obj.schema_id
+            where obj.type = 'FN' and DB_NAME() = @Catalog
+        ";
     }
 }

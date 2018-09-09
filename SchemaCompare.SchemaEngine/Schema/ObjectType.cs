@@ -4,7 +4,8 @@ namespace SchemaCompare.SchemaEngine.Schema
     {
         Table,
         View,
-        Function,
+        ScalarFunction,
+        TableFunction,
         Trigger,
         Column,
         Index,

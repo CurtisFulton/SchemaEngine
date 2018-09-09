@@ -5,7 +5,7 @@ namespace SchemaCompare.SchemaEngine.Comparison
 {
     public class Difference : IDifference
     {
-        public bool UseInGeneration { get; set; }
+        public bool UseInGeneration { get; set; } = true;
 
         public DifferenceType Type { get; private set; }
 
