@@ -13,11 +13,11 @@ namespace SchemaCompare.SchemaEngine.Comparison
         {
             var differences = new Differences();
 
-            differences.AddRange(this.GetDifferences(databaseA[ObjectType.Table], databaseB[ObjectType.Table], options));
-            differences.AddRange(this.GetDifferences(databaseA[ObjectType.View], databaseB[ObjectType.View], options));
-            differences.AddRange(this.GetDifferences(databaseA[ObjectType.Procedure], databaseB[ObjectType.Procedure], options));
-            differences.AddRange(this.GetDifferences(databaseA[ObjectType.TableFunction], databaseB[ObjectType.TableFunction], options));
-            differences.AddRange(this.GetDifferences(databaseA[ObjectType.ScalarFunction], databaseB[ObjectType.ScalarFunction], options));
+            differences.AddRange(this.GetDifferences(databaseA[ObjectType.Table],           databaseB[ObjectType.Table],            options));
+            differences.AddRange(this.GetDifferences(databaseA[ObjectType.View],            databaseB[ObjectType.View],             options));
+            differences.AddRange(this.GetDifferences(databaseA[ObjectType.Procedure],       databaseB[ObjectType.Procedure],        options));
+            differences.AddRange(this.GetDifferences(databaseA[ObjectType.TableFunction],   databaseB[ObjectType.TableFunction],    options));
+            differences.AddRange(this.GetDifferences(databaseA[ObjectType.ScalarFunction],  databaseB[ObjectType.ScalarFunction],   options));
 
             return differences;
         }

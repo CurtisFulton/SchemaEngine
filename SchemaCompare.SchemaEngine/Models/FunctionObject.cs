@@ -21,17 +21,11 @@ namespace SchemaCompare.SchemaEngine
         public ObjectType Type { get; set; } = ObjectType.TableFunction;
         public string FullyQualifiedName => $"[{this.SchemaName}].[{this.FunctionName}]";
 
+        // Because I re-use the object, we need to change the type string based on the Type of the object
         private string TypeString => this.Type == ObjectType.TableFunction ? "TF" : "FN";
 
-        public IEnumerable<IScriptBlock> AlterTo(IDatabaseObject obj, Options options)
-        {
-            return new List<IScriptBlock>() { this.CreateFunction() };
-        }
-
-        public IScriptBlock CreateBlock(Options options)
-        {
-            return this.CreateFunction();
-        }
+        public IEnumerable<IScriptBlock> AlterTo(IDatabaseObject obj, Options options) => new List<IScriptBlock>() { this.CreateFunction() };
+        public IScriptBlock CreateBlock(Options options) => this.CreateFunction();
 
         public IScriptBlock DropBlock(Options options)
         {

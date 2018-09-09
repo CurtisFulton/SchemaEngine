@@ -12,7 +12,7 @@ namespace SchemaCompare.App
     public class Program
     {
         private const string ConnectionStringA = @"Data Source=localhost\SQLEXPRESS2008;Initial Catalog=MEXDB;Integrated Security=False;User ID=sa;Password=Admin123;MultipleActiveResultSets=True";
-        private const string ConnectionStringB = @"Data Source=localhost\SQLEXPRESS2008;Initial Catalog=TestDB;Integrated Security=False;User ID=sa;Password=Admin123;MultipleActiveResultSets=True";
+        private const string ConnectionStringB = @"Data Source=localhost\SQLEXPRESS;Initial Catalog=OboeteDB;Integrated Security=False;User ID=sa;Password=Admin123;MultipleActiveResultSets=True";
         private const string OutputDir = @"D:\Programming\C#\SchemaCompare\Output.txt";
 
         static void Main(string[] args)
